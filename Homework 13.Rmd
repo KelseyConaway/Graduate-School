@@ -1,0 +1,82 @@
+---
+title: "Homework 13"
+author: "Kelsey Conaway"
+date: "December 4, 2018"
+output: pdf_document
+---
+STAT 5193
+R Markdown
+
+Question 1.a
+```{r}
+library(readxl)
+setwd("C:/Users/Kelsey/Documents/R Projects/")
+StudentData <- read_excel("Data Sets/StudentData.xlsx")
+
+
+t.test(StudentData$HSClass~StudentData$Snapchat,conf.level = 0.95)
+```
+The test rendered a CI of (-344.08,31.101) and since 0 is in the interval this indicates there's no significant difference in the mean high school class size of those who Snapchat and those who don't.
+
+Question 1.b
+```{r}
+boxplot(StudentData$HSClass~StudentData$Snapchat)
+```
+
+Question 1.c
+```{r}
+t.test(StudentData$HSClass~StudentData$Snapchat,
+       alternative = "less")
+```
+The p-value of 0.04938 would indicate that there is significant evidence that the mean high school class size is smaller for those who do not have Snapchat than those who do.
+
+
+Question 1.d
+```{r}
+t.test(StudentData$HSClass~StudentData$Snapchat,
+       conf.level=0.9)
+```
+The CI (-312.39,-0.596) does not include 0 which would indicate that there is significant evidence to say that the average class size is different for those who use Snapchat and those who don't at the 90% confidence level.
+
+Question 2.a
+```{r}
+plot(USArrests$Assault,USArrests$Murder)
+
+model<-lm(Murder~Assault, data=USArrests)
+abline(model)
+```
+Question 2.b
+
+summary(model) output the following values:
+
+Estimate          Std.Error     t       value   Pr(>|t|)  
+USArrests$Assault 0.041909   0.004507   9.298  2.6e-12 ***
+
+The p-value 2.6 ^(-12) indicates that the variable are not independent of one another.
+
+Question 2.c
+```{r}
+new<-data.frame(Assault=151)
+predict.lm(model,new,interval = "prediction")
+```
+
+Question 2.d
+```{r}
+plot(USArrests$Assault,USArrests$Murder)
+abline(model)
+
+predict_int<- predict(model,
+                      new=data.frame(Assault=50:400),
+                      interval = "prediction", 
+                      level = 0.95)
+
+x<-seq(50,400,by=1)
+
+
+lines(x,predict_int[,3])
+lines(x,predict_int[,2])
+```
+```{r}
+ 
+```
+

@@ -1,0 +1,70 @@
+---
+title: "Homework 12"
+author: "Kelsey Conaway"
+date: "November 30, 2018"
+output: pdf_document
+---
+STAT 5093
+R Markdown
+
+Question 1.a
+```{r}
+library(readxl)
+SData <- read_excel("~/R Projects/Data Sets/StudentData.xlsx")
+
+library(vcd)
+gp_student<-table(SData$Gender,SData$Pinterest)
+gp_student
+```
+
+Question 1.b
+```{r}
+p_gp<-prop.table(margin.table(gp_student,1:2),1)
+p_gp
+```
+
+Question 1.c 
+```{r}
+resid<-resid(chisq.test(gp_student))
+resid[,2]
+```
+There were more female and less male Pinterest users than expected 
+
+Question 1.d and 1.e
+```{r}
+barplot(t(gp_student),
+        beside=TRUE,
+        names=c("Female","Male"),
+        col= c("grey","red","grey","red"),
+        main="Pinterest Depends on Gender (p=0.03397)")
+
+#fisher.test(gp)
+
+legend("topright",
+       inset=0.05,
+       title="Pinterest",
+       legend= c("No","Yes"),
+       fill = c("grey","red"))
+```
+
+Question 2
+```{r}
+survivors <- apply(Titanic,c(1,4),sum)
+mosaic(survivors, legend=T, gp=shading_max)
+```
+The p-value of <2.22^(-16) would indicate that survival depended on class
+
+
+Question 3
+```{r}
+gender<-apply(Titanic,c(2,4),sum)
+chisq.test(gender)
+```
+The p-value of <2.2^(-16) indicates that survival rate significantly depended on gender.
+
+Question 4
+```{r}
+age <- apply(Titanic,c(3,4),sum)
+chisq.test(age)
+```
+The p-value of 7.725^(-6) indicates that survival rate significantly depended on age.

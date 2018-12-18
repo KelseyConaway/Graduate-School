@@ -1,0 +1,131 @@
+---
+title: "R Graduate Project"
+author: "Kelsey Conaway"
+date: "November 23, 2018"
+output: pdf_document
+---
+STAT 5193
+
+  The following was designed to quickly execute a t-test on sample data that has been inputed 
+into the function. The function will be of the form t.test(my.data,u,numtails=2,alpha=0.05)
+where the inputs are as follows: my.data is the sample data, u is the claimed µ in the 
+null hypothesis, numtails is the number of tails for the alternative hypothesis, and alpha 
+the significance level. The number of tails will have a default value of 2, and alpha will have 
+a default value of 0.05. The returned ouput will include the results of the t-test, 
+"Reject Null Hypothesis" or "Fail to Reject", along with a graph showing the curve of the t-distribution. The curve will consider the appropriate degrees of freedom, display one or two blue vertical lines indicating the rejection region(s), and depict a red line indicating the location of the calculated test statistic.
+
+```{r}
+#Designs the layout of the function that will be created
+t_test<-function(my.data,u,numtails=2,alpha=0.05){
+  
+  
+  #the following lines of code calculate the t-test statistic
+  x <- mean(my.data)
+  stdev <- sd(my.data)
+  n <- length(my.data)
+  df <- n-1
+  
+  std_err <- stdev/sqrt(n)
+  
+  t <- (x-u)/(std_err)
+  
+  #when a two tailed (???) test is indicated by numtails=2 the following will run
+  if(numtails==2)  
+  {
+    #calculates the t critical value to test the null hypothesis
+    t_crit <- qt(alpha/2,df,lower.tail = TRUE) 
+    
+    #the next three lines determine:
+    #1) the location of the rejection regions and test stat
+    #2) the curve for a t-distribution with the appropriate df
+    #3) the the type/style of lines that will be displayed on the curve
+    regions<-c(-t_crit,t_crit,t) 
+    curve(dt(x,df),col="blue",xlim=c(-5,5))
+    abline(v=regions,col=c("blue", "blue","red"))
+    
+    #compares the test statistic to the critical value
+     if(abs(t)>abs(t_crit)) 
+             {
+              #when determined outside the critical value print "reject..."
+              print("Reject Null Hypothesis")
+              }
+     #when determined inside/at the critical value print FTR
+     else print ("Fail to Reject")
+            
+  }
+  
+  #when a one tailed test is indicated by numtails=1 the following will run
+  if(numtails==1) 
+  {
+    #will determine if it's a lower-tailed test
+    if(u>=x) 
+      {
+        #calculates the t critical value
+        t_crit<-qt(alpha,df,lower.tail = TRUE) 
+        
+        #The next three lines determine the same 1,2,3 listed above but for a                   
+        #single rejection region
+        regions<-c(t,t_crit)
+        curve(dt(x,df),col="blue",xlim=c(-4,4))
+        abline(v=regions,col=c("red", "blue"))
+        
+        #compares the test statistic and critical value
+        if(abs(t)>abs(t_crit)) 
+          {
+           #if compariston is true we reject and print "reject..."
+           print("Reject Null Hypothesis") 
+          }
+        #otherwise we print FTR
+        else print ("Fail to Reject") 
+                
+      }
+    
+    #determines if it's an upper-tailed test
+    if (u<x) 
+    {
+     #calculates the t critical value
+     t_crit<-qt(alpha,df,lower.tail = FALSE) 
+     
+     #The next three lines determine the same 1,2,3 listed above but for                    
+     #a single rejection region
+     regions<-c(t,t_crit)
+     curve(dt(x,df),col="blue",xlim=c(-5,5))
+     abline(v=regions,col=c("red", "blue"))
+      
+     #compares the test statistic and critical value
+     if(abs(t)>abs(t_crit)) 
+                  {
+                   #if compariston is true we print "reject...""
+                   print("Reject Null Hypothesis") 
+                  }
+     #otherwise we FTR
+     else print ("Fail to Reject") 
+              
+    }
+  }
+  print("Disclaimer: For a one-tailed test, if the mean calculated for the sample data is greater than the stated µ an upper-tailed test is automatically computed. Likewise, if the mean is less than the stated µ a lower-tailed test is computed.")
+}
+
+```
+
+To make this reproducible, I have decided to use a dataset 
+in the library MASS to test the function I have created. 
+I tested to see what the mean of the variable circumference is, 
+so that I could create a "null hypothesis" to test against.
+
+```{r}
+library(MASS)
+mean(Orange$circumference)
+
+#two-tailed/alpha=0.05 by default and u=118 so we expect to FTR 
+t_test(Orange$circumference,118)
+
+#we now test the one-tailed at significance of 0.02 and since u=118 we expect to FTR
+t_test(Orange$circumference,118,numtails = 1,alpha=0.02)
+
+#two tailed/alpha=0.05, u=145 so should reject
+t_test(Orange$circumference,145)
+
+#one tailed/alpha=0.02, u=145 so should reject
+t_test(Orange$circumference,145,numtails = 1,alpha=0.02)
+```

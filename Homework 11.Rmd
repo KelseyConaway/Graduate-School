@@ -1,0 +1,81 @@
+---
+title: "Homework 11"
+author: "Kelsey Conaway"
+date: "November 27, 2018"
+output: pdf_document
+---
+STAT 5193 
+
+Question 1
+```{r}
+set.seed(1)
+x <- rlnorm(50, meanlog = 0,sdlog = 2)
+
+#part a
+boxplot(x,col = "red",
+        main="Boxplot of Lognormal Data",
+        range=3, 
+        yaxt='n',
+        pch=3)
+#part b
+
+summary <-boxplot.stats(x)  
+axis(2,at=summary$stats[3],label="M = 1.3")  
+
+#part c
+outlier<-summary$stats[4] + 3*(summary$stats[4] - summary$stats[2])
+abline(h=outlier, col ="red", lty =2)
+
+#part d
+legend("topleft", legend="outlier", pch ="+", inset=0.05 )
+
+#part e
+axis(4,at=x, label=FALSE)
+```
+
+Question 2
+```{r}
+library(readxl)
+SD <- read_excel("~/R Projects/Data Sets/StudentData.xlsx")
+
+#part a-c
+boxplot(SD$Fbtime~SD$Pinterest*SD$Gender,
+        col=c("pink","pink","blue","blue"),
+        names=c("No Pinterest","Pinterest", "No Pinterest","Pinterest"),
+        ylab="FB Time",
+        main="FB Time vs. Pinterest by Gender")
+
+#part d
+legend("topleft",
+       legend=c("Female","Male"),
+       fill=c("pink","blue"),
+       inset=0.05)
+```
+
+Question 3
+```{r}
+aggregate(SD$Fbtime, 
+            by = list(pinterest=SD$Pinterest,gender=SD$Gender), 
+            FUN=median)
+
+new_mean<-function(x)
+            {
+            mean(x,trim = 0.05)
+            }
+
+
+aggregate(SD$Fbtime, 
+            by = list(pinterest=SD$Pinterest, gender=SD$Gender), 
+            FUN=new_mean)
+```
+
+Question 4
+```{r}
+Ordered<-USArrests[order(USArrests$Murder),]
+
+dotchart(Ordered$Murder, 
+         labels = row.names(Ordered), 
+         main = "Murder Rates by State",
+         cex=0.6)
+```
+

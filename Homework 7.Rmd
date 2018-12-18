@@ -1,0 +1,84 @@
+---
+title: "Homework 7"
+author: "Kelsey Conaway"
+date: "November 6, 2018"
+output:
+  pdf_document: default
+  word_document: default
+---
+
+---
+title: "Homework 7"
+author: "Kelsey Conaway"
+date: "November 6, 2018"
+output: pdf_document
+---
+
+Question 1
+```{r}
+
+library(readxl)
+StudentData <- read_excel("C:/Users/Kelsey/Documents/R Projects/Data Sets/StudentData.xlsx")
+View(StudentData)
+
+KMC<-data.frame(StudentData)
+```
+
+Question 2
+```{r}
+KMC$TxtRec[1]<-NA
+KMC$TxtSent[1]<-NA
+
+KMC[1:3,]
+```
+Question 3
+```{r}
+d.text<-KMC$TxtSent-KMC$TxtRec
+KMC<-data.frame(KMC[1:5],d.text,KMC[6:9])
+KMC[1:3,]
+```
+
+Question 4
+```{r}
+d.text.cat<-factor(sign(d.text), ordered = T,
+                   levels = c(-1,0,1),
+                   labels=c("Neg","0","Pos"))
+
+KMC<-data.frame(KMC,d.text.cat)
+KMC
+```
+Question 4 alt.
+```{r}
+KMC$d.text.cat.2[KMC$d.text<0]<-"Neg"
+KMC$d.text.cat.2[KMC$d.text==0]<-"0"
+KMC$d.text.cat.2[KMC$d.text>0]<-"Pos"
+
+KMC$d.text.cat.2<-as.factor(KMC$d.text.cat.2)
+```
+
+
+Question 5
+```{r}
+Ordered<-KMC[order(KMC$Gender,d.text),]
+Ordered
+```
+Question 6
+```{r}
+OSU<-rep("Y",35)
+OSU[23:24]<-"N"
+OSU[26:29]<-"N"
+OSU[31:35]<-"N"
+U.OSU<-data.frame(OSU)
+
+rows<-as.numeric(row.names(Ordered))
+Ordered<-cbind(Ordered,U.OSU[rows,])
+Ordered[1:5,]
+```
+Question 7
+```{r}
+set.seed(1)
+mean(KMC$HSClass[sample(1:nrow(KMC),35, replace=T)],trim=0.05)
+mean(Ordered$HSClass[sample(1:nrow(KMC),35, replace=T)],trim=0.05)
+```
+
+

@@ -1,0 +1,81 @@
+---
+title: "R Graduate Project"
+author: "Kelsey Conaway"
+date: "November 23, 2018"
+output: pdf_document
+---
+
+The following function was designed to quickly interpret the results of a t-test.
+The function will be of the form t.test(my.data,u,numtails=2,alpha=0.05)
+where my.data is the sample data, u is the claimed µ in the null hypothesis, numtails is the number of tails for the alternative hypothesis, and alpha is the significance level.
+
+```{r}
+t.test<-function(my.data,u,numtails=2,alpha=0.05){
+  
+  x <- mean(my.data)
+  stdev <- sd(my.data)
+  n <- length(my.data)
+  df <- n-1
+  
+  std_err <- stdev/sqrt(n)
+  
+  t <- (x-u)/(std_err)
+  
+  
+  if(numtails==2)
+  {
+    t_crit <- qt(alpha/2,df,lower.tail = TRUE)
+      
+     if(abs(t)>abs(t_crit))
+             {
+              print("Reject Null Hypothesis")
+             }
+     else print ("Fail to Reject")
+            
+  }
+  
+  if(numtails==1)
+  {
+    if(u>x)
+      {
+        t_crit<-qt(alpha,df,lower.tail = TRUE)
+        if(abs(t)>abs(t_crit))
+          {
+           print("Reject Null Hypothesis")
+          }
+        else print ("Fail to Reject")
+                
+       }
+    if (u<x)
+    {
+     t_crit<-qt(alpha,df,lower.tail = FALSE) 
+      
+     if(abs(t)>abs(t_crit))
+                  {
+                   print("Reject Null Hypothesis")
+                  }
+     else print ("Fail to Reject")
+              
+    }
+  }
+  
+  hist(my.data,
+       probability = T,
+       xlab="x",
+       ylab="y",
+       main="Histogram")
+  
+  curve(dt(x,df),col="blue",add=T)
+}
+
+```
+
+```{r}
+hist(lcoe$Solar,
+     probability=TRUE,
+       xlab="x",
+       ylab="y",
+       main="Histogram")
+  
+  curve(dt(x,df),col="blue",add=T)
+```

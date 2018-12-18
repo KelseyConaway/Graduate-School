@@ -1,0 +1,102 @@
+---
+title: "Homework 9"
+author: "Kelsey Conaway"
+date: "November 13, 2018"
+output: pdf_document
+---
+STAT 5193
+
+
+Question 1.a
+```{r}
+boot.mean <- function(my.data,trim.percent=0.05) {
+   dat.mean <- mean(sample(my.data,replace=T),trim=trim.percent)
+   return(dat.mean)
+}
+```
+
+Question 1.b
+```{r}
+setwd("C:/Users/Kelsey/Documents/R Projects/")
+library(readxl)
+StudentData <- read_excel("Data Sets/StudentData.xlsx")
+
+set.seed(1)
+boot.mean(StudentData$HSClass)
+boot.mean(StudentData$HSClass,trim.percent = 0.1)
+```
+
+Question 2.a
+```{r}
+set.seed(1)
+my.boot.sample<- vector("double",length=10000)
+  
+
+for(i in 1:10000)
+ {
+ my.boot.sample[i]<-boot.mean(StudentData$HSClass)
+ }
+
+mean(my.boot.sample)
+sd(my.boot.sample)
+  
+```
+
+Question 2.b and 2.c
+
+```{r}
+hist(my.boot.sample,probability = T, 
+     main="Trimmed Mean Sampling Distribution")
+curve(dnorm(x,mean=mean(my.boot.sample),sd=sd(my.boot.sample)),add=T)
+```
+
+Question 2.d
+```{r}
+quantile(my.boot.sample,c(0.025,0.975))
+```
+
+Question 3.a
+```{r}
+boot.ci<-function(my.data, plot.it=T, trim.percent=0.05){
+ 
+   my.sampled.data<- vector("double",length=10000)
+  
+for(i in 1:10000)
+ {
+ my.sampled.data[i]<-boot.mean(my.data,trim.percent = trim.percent)
+ }
+
+if(plot.it==T)
+  {
+  hist(my.sampled.data,
+       probability = T, 
+       main="Trimmed Mean Sampling Distribution")
+   
+curve(dnorm(x,
+            mean=mean(my.sampled.data),
+            sd=sd(my.sampled.data)),
+      add=T)
+  }
+ 
+   quantile(my.sampled.data,c(0.025,0.975))
+}
+```
+
+Question 3.b
+```{r}
+set.seed(1)
+boot.ci(StudentData$HSClass)
+```
+
+Question 3.c
+```{r}
+set.seed(1)
+ticks <-boot.ci(
+  StudentData$HSClass,
+  trim.percent = 0.25,
+  plot.it=T)
+ticks
+axis(1, at = ticks, tick=TRUE, col.ticks = "red")
+```
+
+

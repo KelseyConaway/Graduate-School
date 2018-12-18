@@ -1,0 +1,44 @@
+---
+output:
+  word_document: default
+  wd_document: default
+---
+Homework 5
+Kelsey Conaway
+
+Question 1
+```{r}
+library(readxl)
+StudentData <- read_excel("Data Sets/StudentData.xlsx")
+View(StudentData)
+
+#demo("colors")
+help("boxplot")
+```
+
+```{r}
+boxplot(StudentData$Fbtime~StudentData$Class, 
+        names=c("U","G"), 
+        col=c("pink","blue"), 
+        xlab="Class", 
+        ylab="Time", 
+        main="Facebook Time vs. Class")
+```
+
+Question 2
+```{r}
+
+StudentData_trim<-StudentData[-23,]
+gender<-as.factor(StudentData_trim$Gender)
+plot(StudentData_trim$Fbtime,StudentData_trim$Introvert,
+     xlab="FaceBook Time",
+     ylab="Introversion",
+     main="FB vs. Introversion vs. Gender",
+     pch=StudentData_trim$Gender,
+     col=c("pink","blue")[gender],
+     points(x=120,y=7,pch="O"))
+abline(lm(StudentData$Introvert~StudentData$Fbtime),col="orange",lty=1)
+abline(lm(StudentData_trim$Introvert~StudentData_trim$Fbtime),col="green",lty=2)
+```
+
+

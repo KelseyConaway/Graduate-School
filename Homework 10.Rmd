@@ -1,0 +1,80 @@
+---
+title: "Homework 10"
+author: "Kelsey Conaway"
+date: "November 18, 2018"
+output: pdf_document
+---
+STAT 5193
+R Markdown
+
+```{r}
+setwd("C:/Users/Kelsey/Documents/R Projects/")
+library(readxl)
+StudentData <- read_excel("Data Sets/StudentData.xlsx")
+```
+
+Question 1
+```{r}
+snapgen_table <- table(StudentData$Snapchat,StudentData$Gender)
+barplot(snapgen_table,
+        col=c("red","green"),
+        legend=rownames(snapgen_table),
+        args.legend = list(title="Snapchat"),
+        beside = T
+        )
+```
+
+Question 2
+```{r}
+mean_HSclass<-aggregate(StudentData$HSClass~StudentData$Pinterest,
+                         FUN = median)
+mean_HSclass
+rownames(mean_HSclass)<-c("No Pinterest", "Pinterest")
+barplot(mean_HSclass$`StudentData$HSClass`,
+        names.arg = rownames(mean_HSclass),
+        col = c("gray","red"))
+```
+
+Question 3
+```{r}
+hist(StudentData$HSClass,
+     probability=T)
+
+lines(density(StudentData$HSClass),
+      col="blue",
+      lwd=3)
+
+curve(dnorm(x,mean=321.4,sd=304.71),
+      add=T,
+      lty=2,
+      lwd=4,
+      col="red")
+
+legend("topright",
+       c("Kernel","Normal"),
+       lty = 1:2,
+       lwd= 3:4,
+       col=c("blue","red"))
+```
+
+Question 4
+```{r}
+USPersonalExpenditure
+Y1960 <- c(86.8,46.2,21.1,5.4,3.64)
+L1960 <- c("Food and Tobacco",
+            "Household Operation",
+            "Medical and Health",
+            "Personal Care",
+            "Private Education")
+
+percent<- round((Y1960/sum(Y1960))*100, digits=2)
+
+Label_60 <-paste(L1960,": ",percent,"%" )
+
+pie(Y1960,
+    labels = Label_60,
+    main="Pie ",
+    col=1:5)
+```
+
+

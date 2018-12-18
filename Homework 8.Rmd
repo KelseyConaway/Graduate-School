@@ -1,0 +1,91 @@
+---
+title: "Homework 8"
+author: "Kelsey Conaway"
+date: "November 8, 2018"
+output:
+  word_document: default
+  pdf_document: default
+---
+#STAT 5193
+#11/8/18
+Question 1
+
+```{r}
+help(source)
+setwd("~/R Projects/Scripts")
+source("Day8Script.R")
+
+roster
+ls()
+
+score
+roster$score
+"roster <- roster[order(Lastname,Firstname),]"
+```
+
+```{r}
+a<-quantile(score, c(0.25,0.75))
+roster$`Easy Grade`[roster$score >= a[2]] <- "A"
+roster$`Easy Grade`[roster$score < a[2] & roster$score >= a[1]] <- "B"
+roster$`Easy Grade`[roster$score < a[1]] <- "C"	
+roster
+```
+
+```{r}
+b<-scale(roster$Math)
+c<-quantile(b,c(0.25,0.75))
+roster$MathGrade[b >= c[2]] <- "A"
+roster$MathGrade[b < c[2] & score >= c[1]] <- "B"
+roster$MathGrade[b < c[1]] <- "C"	
+roster
+```
+
+```{r}
+Roster<-roster[order(-roster$Math),]
+Roster
+```
+```{r}
+Name<-paste(Roster$Firstname,Roster$Lastname)
+row.names(Roster)<-Name
+
+Roster2<-Roster[,c(-1,-2)]
+Roster2
+```
+
+Question 2
+```{r}
+set.seed(1)
+t.data<-rt(1000,10)
+hist(t.data,probability = T,
+     xlab="x",ylab="y", 
+     main="Normal Approximation")
+
+curve(dt(x,df=10),col="blue",add=T)
+
+curve(dnorm,lty=2,col="red",add=T)
+
+legend(x="topleft", legend = c("Student's T","Normal"), 
+ lty = c(1,2), col = c("blue","red"),lwd=3, inset = 0.05)
+```
+Question 3
+
+```{r}
+binomial<-rbinom(10000,100,0.05)
+hist(binomial,probability = T, xlab="x",ylab="density",
+     main="Binomial(100,0.05)")
+
+
+curve(dnorm(x,mean=5,sd=2.2),add=T)
+```
+
+Question 3
+
+```{r}
+binomial<-rbinom(10000,100,0.1)
+hist(binomial,probability = T, xlab="x",ylab="density",
+     main="Binomial(100,0.1)")
+
+
+curve(dnorm(x,mean=10,sd=sqrt(9)),add=T)
+```
+YES
